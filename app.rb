@@ -1,6 +1,15 @@
 require 'bundler'
 Bundler.require
 
+happy_thoughts = Smile.new
+happy_thoughts.add_smile("everyone's smiling faces")
+happy_thoughts.add_smile("coffee was full")
+happy_thoughts.add_smile("redbull :D")
+happy_thoughts.add_smile("life is good")
+happy_thoughts.add_smile('happy happy joy joy')
+happy_thoughts.add_smile('log log its big better its wood')
+happy_thoughts.add_smile('log log better than bad its good')
+
 before '/*' do
   puts Rainbow('Request ------').send(:aqua)
   puts Rainbow("Host: " + request.host + request.path).send(:cyan)
@@ -18,4 +27,14 @@ get '/' do
     :purpose => 'avenge my father',
     :quote => 'prepare to die'
   }.to_json
+end
+
+get '/smiles' do
+  { :happy_thoughts => happy_thoughts.get_smiles }.to_json
+end
+
+get '/smiles/:keyword' do
+  @query = params[:keyword]
+  @list = happy_thoughts.find_smile(@query)
+  { :search_results => @list }.to_json
 end
